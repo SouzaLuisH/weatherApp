@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, Text, View } from "react-native";
+import { useRequest } from "../../hooks/useRequest";
 
 type WeatherData = {
   id: number;
@@ -7,7 +8,6 @@ type WeatherData = {
   description: string;
   icon: string;
 };
-
 type MainData = {
   temp: string;
   feels_like: string;
@@ -16,7 +16,6 @@ type MainData = {
   pressure: number;
   humidity: number;
 };
-
 type WindData = {
   speed: number;
   deg: number;
@@ -33,21 +32,15 @@ type Request = {
   sys: SysData;
 };
 
-const apiLink =
-  "https://api.openweathermap.org/data/2.5/weather?lat=-30.033056&lon=-51.230000&appid=5d78cb4ca6326a7d206524e880dc61b9&lang=pt&units=metric";
+//prettier-ignore
+const apiLink = "https://api.openweathermap.org/data/2.5/weather?lat=-30.033056&lon=-51.230000&appid=5d78cb4ca6326a7d206524e880dc61b9&lang=pt&units=metric";
 
 export const Home = () => {
-  const [data, setData] = useState<Request | null>(null);
-
-  useEffect(() => {
-    fetch(apiLink)
-      .then((response) => response.json())
-      .then((data) => setData(data));
-  }, []);
+  const weather = useRequest<Request>(apiLink);
 
   return (
     <ScrollView style={{ flex: 1, marginTop: 30 }}>
-      <Text>{JSON.stringify(data, null, 4)}</Text>
+      <Text>{JSON.stringify(weather, null, 4)}</Text>
     </ScrollView>
   );
 };
