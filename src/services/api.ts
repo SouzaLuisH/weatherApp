@@ -1,21 +1,12 @@
 import { useRequest } from "../hooks/useRequest";
-import { MainData, SysData, WeatherData, WindData } from "./typesApi";
-
-export type ApiCurrentWeatherRequestType = {
-  name: string;
-  weather: WeatherData;
-  main: MainData;
-  wind: WindData;
-  sys: SysData;
-};
-
-export type ApiLocationRequestType = {
-  lat: string;
-  lon: string;
-  country: string;
-  state: string;
-  name: string;
-};
+import {
+  ApiCurrentWeatherRequestType,
+  ApiLocationRequestType,
+  MainData,
+  SysData,
+  WeatherData,
+  WindData,
+} from "./typesApi";
 
 const API_KEY = "5d78cb4ca6326a7d206524e880dc61b9";
 export const currentWeatherRequest = ({

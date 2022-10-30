@@ -19,3 +19,19 @@ export type WindData = {
 export type SysData = {
   country: string;
 };
+
+export type ApiCurrentWeatherRequestType = {
+  name: string;
+  weather: WeatherData;
+  main: MainData;
+  wind: WindData;
+  sys: SysData;
+};
+
+export type ApiLocationRequestType = {
+  lat: string;
+  lon: string;
+  country: string;
+  state: string;
+  name: string;
+};
