@@ -1,46 +1,64 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, Text, View } from "react-native";
-import { useRequest } from "../../hooks/useRequest";
+import {
+  TouchableOpacity,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+  FlatList,
+} from "react-native";
 
-type WeatherData = {
-  id: number;
-  main: string;
-  description: string;
-  icon: string;
-};
-type MainData = {
-  temp: string;
-  feels_like: string;
-  temp_min: string;
-  temp_max: string;
-  pressure: number;
-  humidity: number;
-};
-type WindData = {
-  speed: number;
-  deg: number;
-};
-type SysData = {
-  country: string;
-};
-
-type Request = {
-  name: string;
-  weather: WeatherData;
-  main: MainData;
-  wind: WindData;
-  sys: SysData;
-};
-
-//prettier-ignore
-const apiLink = "https://api.openweathermap.org/data/2.5/weather?lat=-30.033056&lon=-51.230000&appid=5d78cb4ca6326a7d206524e880dc61b9&lang=pt&units=metric";
+import {
+  currentWeatherRequest,
+  getLocalizationWithCityName,
+} from "../../services/api";
 
 export const Home = () => {
-  const weather = useRequest<Request>(apiLink);
+  const [typedCityName, setTypedCityName] = useState<string | null>(" ");
+  const [local, setLocal] = useState({ lat: "", lon: "" });
+
+  const cityList = getLocalizationWithCityName(typedCityName);
+
+  const currentWeather = currentWeatherRequest(local);
+
+  useEffect(() => {
+    if (!typedCityName) setTypedCityName(" ");
+  }, [typedCityName]);
 
   return (
     <ScrollView style={{ flex: 1, marginTop: 30 }}>
-      <Text>{JSON.stringify(weather, null, 4)}</Text>
+      <Text>{currentWeather?.name}</Text>
+      <Text>{currentWeather?.main?.temp} °C</Text>
+
+      <TextInput
+        placeholder="nome da cidade"
+        onChangeText={(typed) => {
+          setTypedCityName(typed);
+        }}
+      />
+
+      <FlatList
+        data={cityList}
+        renderItem={({ item, index }) => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                setLocal({ lat: item.lat, lon: item.lon });
+              }}
+            >
+              <View style={{ borderWidth: 1 }}>
+                <Text>{item.name}</Text>
+                <Text>
+                  {item.state} - {item.country}
+                </Text>
+                <Text>
+                  {item.lat} , {item.lon}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
+      />
     </ScrollView>
   );
 };
